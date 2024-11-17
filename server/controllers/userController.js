@@ -36,6 +36,7 @@ const userLogin = async (req, res) => {
 
 const googleLoginHandler = async (req, res) => {
   const { token } = req.body;
+  console.log(token);
   try {
     const { token: jwtToken, user } = await googleLogin(token);
     res.json({ token: jwtToken, user });

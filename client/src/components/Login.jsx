@@ -1,4 +1,5 @@
-import { Input, Link } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
+import {Link} from "@nextui-org/link";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
 import { EyeFilledIcon } from "./utilities/EyeFilledIcon.jsx";
@@ -46,7 +47,7 @@ export default function SignInPage() {
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const response = await axios.post("https://xenoassignment.onrender.com/auth/google-login", {
+                const response = await axios.post("http://localhost:8080/auth/google-login", {
                     token: tokenResponse.access_token,
                 });
 

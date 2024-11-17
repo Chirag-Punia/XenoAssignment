@@ -1,4 +1,5 @@
-import { Input, Link } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
+import {Link} from "@nextui-org/link";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
 import { EyeFilledIcon } from "./utilities/EyeFilledIcon.jsx";
@@ -10,7 +11,7 @@ import {toast} from "react-toastify";
 import {FcGoogle} from "react-icons/fc";
 import {useNavigate} from "react-router-dom";
 
-export default function SignUpPage() {
+export default function Signup() {
     const [isVisible, setIsVisible] = useState(false);
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -65,7 +66,7 @@ export default function SignUpPage() {
                 <div className="h-[610px] flex">
                     <div className="flex-1 flex items-center justify-center">
                         <img
-                            src="../../public/left.jpg"
+                            src="./left.jpg"
                             alt="Left side illustration"
                             className="pulsing-image rounded-full max-w-[650px] h-auto"
                         />

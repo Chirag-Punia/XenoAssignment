@@ -1,8 +1,9 @@
 import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/react";
 import Header from "./Header.jsx";
+import {useNavigate} from "react-router-dom";
 
 export default function LandingPage() {
+    const reactNavigator = useNavigate();
     return (
         <>
             <Header />
@@ -112,7 +113,7 @@ export default function LandingPage() {
                         <Button
                             color="primary"
                             className="mt-8 bg-white text-purple-700 rounded-lg shadow-md px-8 py-4 text-lg hover:bg-gray-100"
-                            onPress={() => window.location.href = "/signup"}
+                            onPress={() =>reactNavigator("/signup")}
                         >
                             Sign Up
                         </Button>
