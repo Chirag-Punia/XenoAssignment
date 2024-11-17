@@ -47,7 +47,7 @@ export default function SignInPage() {
     const handleGoogleLogin = useGoogleLogin({
         onSuccess: async (tokenResponse) => {
             try {
-                const response = await axios.post("http://localhost:8080/auth/google-login", {
+                const response = await axios.post("https://xenoassignment.onrender.com/auth/google-login", {
                     token: tokenResponse.access_token,
                 });
 
