@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: frontend
+    env: node
+    buildCommand: npm install
+    startCommand: npm run dev
+    envVars:
+      - key: VITE_BACKEND_URL
+        value: http://backend:8080
+    plan: free
+    port: 5173
+    build:
+      context: ./client
+      dockerfilePath: Dockerfile
+    autoDeploy: true
+
+  - type: web
+    name: backend
+    env: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: REDIS_URL
+        value: redis://my-redis-docker-service:6379
+    plan: free
+    port: 8080
+    build:
+      context: ./server
+      dockerfilePath: Dockerfile
+    autoDeploy: true
+
+  - type: redis
+    name: my-redis-docker-service
+    env: redis
+    plan: free
+    dockerImage: redis:latest
+    healthCheck:
+      path: /health
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    port: 6379
+    envVars:
+      - key: REDIS_URL
+        value: redis://my-redis-docker-service:6379
+    autoDeploy: true
+
+databases:
+  - name: my-redis-database
+    type: redis
+    envVars:
+      - key: REDIS_URL
+        value: redis://my-redis-docker-service:6379
