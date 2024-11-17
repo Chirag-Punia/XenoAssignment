@@ -26,14 +26,7 @@ const createOrder = async ({
       userId,
     };
 
-    const result = await publishMessage("orders", orderData);
-
-    if (result.success) {
-      const newOrder = new Order(orderData);
-      await newOrder.save();
-    }
-
-    return result;
+    return await publishMessage("orders", orderData);
   } catch (error) {
     console.error("Error in creating order:", error);
     throw new Error("Failed to create order");

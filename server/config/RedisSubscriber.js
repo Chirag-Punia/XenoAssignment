@@ -4,9 +4,9 @@ const Order = require("../models/Order");
 const CommunicationLog = require("../models/CommunicationLog");
 
 const batchQueue = [];
-const BATCH_SIZE = 10;
+const BATCH_SIZE = 30;
 let batchTimeout = null;
-const BATCH_FLUSH_INTERVAL = 5000;
+const BATCH_FLUSH_INTERVAL = 2300;
 
 const flushBatch = async () => {
   if (batchQueue.length === 0) return;
