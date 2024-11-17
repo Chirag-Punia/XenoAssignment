@@ -20,7 +20,7 @@ export default function LandingPage() {
                         <Button
                             color="primary"
                             className="mt-8 bg-white text-purple-700 rounded-lg shadow-md px-8 py-4 text-lg hover:bg-gray-100"
-                            onPress={() => window.location.href = "/login"}
+                            onPress={() => reactNavigator("/login")}
                         >
                             Get Started
                         </Button>
