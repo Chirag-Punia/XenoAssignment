@@ -2,7 +2,7 @@
   "name": "client",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://Chirag-Punia.github.io/XenoAssignment/",
+  "homepage": "https://Chirag-Punia.github.io/XenoAssignment/client",
   "type": "module",
   "scripts": {
     "dev": "vite",
