@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Textarea, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
+import {  Button, Textarea, Card, CardHeader, CardBody, Divider } from '@nextui-org/react';
 import axios from 'axios';
 import Header from './Header.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -11,8 +11,9 @@ function ManageCampaigns() {
     const [selectedSegment, setSelectedSegment] = useState('');
     const [campaigns, setCampaigns] = useState([]);
     const [selectedCampaign, setSelectedCampaign] = useState('');
+    const [loading,setLoading] = useState(false);
+    const [s,setS] = useState(0);
     const navigate = useNavigate();
-
     const token = localStorage.getItem("token");
 
     useEffect(() => {
@@ -45,7 +46,8 @@ function ManageCampaigns() {
 
         fetchSegments();
         fetchCampaigns();
-    }, []);
+        setLoading(true);
+    }, [s]);
 
     const handleCreateCampaign = async () => {
         try {
@@ -56,7 +58,7 @@ function ManageCampaigns() {
                 message,
             };
 
-            const response = await axios.post(
+             await axios.post(
                 'https://xenoassignment.onrender.com/campaigns/create',
                 requestBody,
                 {
@@ -69,7 +71,7 @@ function ManageCampaigns() {
             setMessage('');
             setSelectedSegment('');
             toast.success('Campaign created successfully');
-            setCampaigns((prevCampaigns) => [...prevCampaigns, response.data.campaign]);
+            setS(Math.random());
         } catch (error) {
             console.error('Error creating campaign', error);
         }
@@ -93,11 +95,15 @@ function ManageCampaigns() {
             );
 
             toast.success('Messages sent successfully');
+            setTimeout(() => {
+                setS(Math.random());
+            }, 7000);
         } catch (error) {
             console.error('Error sending messages:', error);
             toast.error('Failed to send messages');
         }
     };
+
 
 
     const handleNewSegment = () => {
@@ -110,11 +116,12 @@ function ManageCampaigns() {
         const sentCount = sentMessages.filter((msg) => msg.status === 'SENT').length;
         const failedCount = sentMessages.filter((msg) => msg.status === 'FAILED').length;
         const pendingCount = sentMessages.filter((msg) => msg.status === 'PENDING').length;
-
-        return { audienceSize, sentCount, failedCount, pendingCount };
+        const a = sentMessages[0].sentAt;
+        return { audienceSize, sentCount, failedCount, pendingCount, a};
     };
 
     const formatDate = (dateString) => {
+        if(dateString == null)return null;
         const date = new Date(dateString);
         return date.toLocaleDateString();
     };
@@ -166,7 +173,7 @@ function ManageCampaigns() {
                         className="w-full p-2 border rounded-md mb-4"
                     >
                         <option value="">Select a Campaign</option>
-                        {campaigns.map((campaign) => (
+                        {!loading ? <option>loading</option> : campaigns.map((campaign) => (
                             <option key={campaign._id} value={campaign._id}>
                                 {campaign.message || 'Campaign Name'}
                             </option>
@@ -182,9 +189,10 @@ function ManageCampaigns() {
                 <div className="w-full max-w-screen-lg">
                     <h2 className="text-2xl font-semibold text-gray-700 mb-4 text-center">Existing Campaigns</h2>
                     <div className="flex flex-wrap justify-start gap-6">
-                        {campaigns.map((campaign) => {
-                            const { audienceSize, sentCount, failedCount, pendingCount } = getCampaignStats(campaign);
-                            const completionDate = formatDate(campaign.sentAt);
+                        {!loading? <div>loading</div>:campaigns.map((campaign) => {
+                            const { audienceSize, sentCount, failedCount, pendingCount, a} = getCampaignStats(campaign);
+
+                            const completionDate = formatDate(a);
 
                             return (
                                 <div key={campaign._id} className="flex-shrink-0 w-full sm:w-1/2 md:w-1/3 lg:w-1/4">

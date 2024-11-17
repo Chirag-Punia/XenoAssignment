@@ -9,14 +9,14 @@ const createCampaignController = async (req, res) => {
   const userId = req.headers.userId;
 
   try {
-    const { logs, batchId } = await createCampaign(
+    const { communicationLog } = await createCampaign(
       audienceCriteria,
       message,
       userId
     );
+
     res.json({
-      logs,
-      batchId,
+      communicationLog
     });
   } catch (err) {
     console.error("Error creating campaign:", err);
@@ -26,14 +26,14 @@ const createCampaignController = async (req, res) => {
 
 const deliveryReceiptController = async (req, res) => {
   const { campaignId } = req.body;
-
+  const userId = req.headers.userId;
   if (!campaignId) {
     return res.status(400).json({ message: "Campaign ID is required" });
   }
 
   try {
-    const logs = await deliveryReceipt(campaignId);
-    res.status(200).json({ message: "Delivery receipt processed", logs });
+    const statusUpdates = await deliveryReceipt({campaignId, userId});
+    res.status(200).json({ message: "Delivery receipt processed", statusUpdates });
   } catch (error) {
     console.error("Error processing delivery receipt:", error);
     res.status(500).json({ message: "Internal Server Error" });

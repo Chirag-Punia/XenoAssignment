@@ -17,38 +17,56 @@ const flushBatch = async () => {
   try {
     console.log(`Flushing batch of size ${batch.length}`);
     const bulkOperations = batch.map(
-      ({ batchId, customerEmail, audienceId, userId, status }) => ({
-        updateOne: {
-          filter: {
-            batchId,
-            audienceId,
-            userId,
-            "sentMessages.customerEmail": customerEmail,
-          },
-          update: {
-            $set: {
-              "sentMessages.$.status": status,
-              "sentMessages.$.deliveryStatusUpdatedAt": new Date(),
+        ({ batchId, customerEmail, userId, status }) => ({
+          updateOne: {
+            filter: {
+              batchId,
+              userId,
+              "sentMessages.customerEmail": customerEmail,
+            },
+            update: {
+              $set: {
+                "sentMessages.$.status": status,
+                "sentMessages.$.sentAt": new Date(),
+              },
             },
           },
-        },
-      })
+        })
     );
 
     const result = await CommunicationLog.bulkWrite(bulkOperations);
     console.log(`Batch processed: ${result.modifiedCount} messages updated`);
+
+  
+    const batchIds = [...new Set(batch.map((item) => item.batchId))];
+    for (const batchId of batchIds) {
+      const remainingPending = await CommunicationLog.findOne({
+        batchId,
+        "sentMessages.status": "PENDING",
+      });
+
+      if (!remainingPending) {
+      
+        await CommunicationLog.updateOne(
+            { batchId },
+            { $set: { status: "COMPLETED" } }
+        );
+        console.log(`Campaign with batch ID ${batchId} marked as COMPLETED`);
+      }
+    }
   } catch (error) {
     console.error("Error flushing batch:", error.message);
   }
 };
 
+
 const handleDeliveryReceipt = async (message) => {
   try {
-    const { batchId, customerEmail, audienceId, userId } = JSON.parse(message);
+    const { batchId, customerEmail, userId } = JSON.parse(message);
 
     const status = Math.random() < 0.9 ? "SENT" : "FAILED";
 
-    batchQueue.push({ batchId, customerEmail, audienceId, userId, status });
+    batchQueue.push({ batchId, customerEmail, userId,status });
 
     console.log(
       `Queued message for ${customerEmail}, queue size: ${batchQueue.length}`
@@ -63,6 +81,7 @@ const handleDeliveryReceipt = async (message) => {
         batchTimeout = null;
       }, BATCH_FLUSH_INTERVAL);
     }
+
   } catch (error) {
     console.error("Error processing delivery receipt:", error.message);
   }
