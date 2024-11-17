@@ -191,9 +191,12 @@ export default function Signup() {
 
                                 <div className="text-center mt-4">
                                     <span className="text-gray-600">Already have an account?</span>{" "}
-                                    <Link href="/login" className="text-blue-600 hover:underline">
-                                        Sign In
-                                    </Link>
+                                    <Button color="primary"
+                                            variant="shadow"
+                                            onClick={() => {
+                                        reactNavigator("/login")
+                                    }}>Sign in</Button>
+
                                 </div>
                             </div>
                         </div>
