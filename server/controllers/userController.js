@@ -4,12 +4,13 @@ const {
   googleLogin,
   getUserInfo,
 } = require("../services/userService");
+const {sign} = require("jsonwebtoken");
 
 const userSignup = async (req, res) => {
   const { name, email, password } = req.body;
   try {
     const newUser = await signup(name, email, password);
-    const token = jwt.sign(
+    const token = sign(
       { id: newUser._id },
       process.env.JWT_SECRET || "SECRET",
       {
