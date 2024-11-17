@@ -1,5 +1,4 @@
 import { Input } from "@nextui-org/react";
-import {Link} from "@nextui-org/link";
 import { Button } from "@nextui-org/button";
 import { useState } from "react";
 import { EyeFilledIcon } from "./utilities/EyeFilledIcon.jsx";
@@ -30,9 +29,9 @@ export default function Signup() {
             const res = await axios.post("https://xenoassignment.onrender.com/auth/signup", { name, email, password });
             localStorage.setItem("token", res.data.token);
             reactNavigator("/home");
-            alert(res.data.msg);
+            toast.success("Signup Successful!");
         } catch (err) {
-            alert(err.response.data.msg);
+           toast.error("An error occurred while logging in.");
         } finally {
             setIsLoading(false);
         }
