@@ -3,6 +3,8 @@ import { googleLogout } from "@react-oauth/google";
 import { Navigate, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import {toast} from "react-toastify";
+import axios from "axios";
+
 const Home = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
@@ -15,35 +17,46 @@ const Home = () => {
 
     const populateCustomerTable = async () => {
         try {
-            const response = await fetch("https://xenoassignment.onrender.com/customers", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
+            const response = await axios.post(
+                "https://xenoassignment.onrender.com/customers",
+                {
                     name: "Random User",
                     email: "randomuser@example.com",
                     totalSpends: Math.floor(Math.random() * 1000),
                     maxVisits: Math.floor(Math.random() * 100),
                     lastVisit: new Date().toISOString(),
-                }),
-            });
+                },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
-            if (response.ok) {
-                toast.success("Customer table populated successfully!")
+            if (response.status === 200) {
+                toast.success("Customer table populated successfully!");
             } else {
-                const data = await response.json();
+                const data = response.data;
                 if (data.errors) {
-                    // Show validation errors to the user
-                    alert(`Validation Errors: ${data.errors.map(err => err.msg).join(', ')}`);
+
+                    alert(`Validation Errors: ${data.errors.map((err) => err.msg).join(", ")}`);
                 } else {
                     alert(`Error: ${data.message || "Failed to populate customer table"}`);
                 }
             }
         } catch (error) {
             console.error("Error populating customer table:", error);
-            alert("An error occurred while populating the customer table.");
+            if (error.response && error.response.data) {
+                const { message, errors } = error.response.data;
+                if (errors) {
+                    alert(`Validation Errors: ${errors.map((err) => err.msg).join(", ")}`);
+                } else {
+                    alert(`Error: ${message || "An error occurred"}`);
+                }
+            } else {
+                alert("An error occurred while populating the customer table.");
+            }
         }
     };
 

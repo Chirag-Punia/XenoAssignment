@@ -1,15 +1,17 @@
 const { publishMessage } = require("../config/RedisPublisher");
 
-const createCustomer = async (customerData) => {
+const createMultipleCustomers = async (customers) => {
   try {
-    await publishMessage("customerData", customerData);
-
+    // Publish customers in one message or multiple messages as required
+    for (const customer of customers) {
+      await publishMessage("customerData", customer);
+    }
   } catch (error) {
-    console.error("Error in creating customer:", error);
-    throw new Error("Failed to create customer");
+    console.error("Error in creating multiple customers:", error);
+    throw new Error("Failed to create multiple customers");
   }
 };
 
 module.exports = {
-  createCustomer,
+  createMultipleCustomers,
 };

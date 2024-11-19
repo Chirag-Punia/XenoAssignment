@@ -1,5 +1,6 @@
-const { createCustomer } = require("../services/customerService");
+const { createMultipleCustomers } = require("../services/customerService");
 const { validationResult } = require("express-validator");
+const Customer = require("../models/Customer");
 
 const getCustomersController = async (req, res) => {
   const userId = req.headers.userId;
@@ -12,28 +13,28 @@ const getCustomersController = async (req, res) => {
   }
 };
 
-const createCustomerController = async (req, res) => {
+const createCustomersController = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
-  const { name, email, totalSpends, maxVisits, lastVisit } = req.body;
   const userId = req.headers.userId;
 
-  const customerData = {
-    name,
-    email,
-    totalSpends,
-    maxVisits,
-    lastVisit,
-    userId,
-  };
-
   try {
-    await createCustomer(customerData);
+    // Generate 30 random customer data
+    const customers = Array.from({ length: 30 }).map(() => ({
+      name: `Random User ${Math.floor(Math.random() * 10000)}`,
+      email: `random${Math.floor(Math.random() * 10000)}@example.com`,
+      totalSpends: Math.floor(Math.random() * 1000),
+      maxVisits: Math.floor(Math.random() * 100),
+      lastVisit: new Date().toISOString(),
+      userId,
+    }));
+
+    await createMultipleCustomers(customers); // Publish all customers
     res.status(200).json({
-      message: "Customer data validated and published successfully",
+      message: "30 random customers created and published successfully",
     });
   } catch (error) {
     console.error("Error publishing customer data:", error);
@@ -43,5 +44,5 @@ const createCustomerController = async (req, res) => {
 
 module.exports = {
   getCustomersController,
-  createCustomerController,
+  createCustomersController,
 };

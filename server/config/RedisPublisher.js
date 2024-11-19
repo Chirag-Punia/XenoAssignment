@@ -1,7 +1,7 @@
 const redis = require("redis");
 
 const redisPublisher = redis.createClient({
-  url: process.env.REDIS_URL || "redis://red-cssj7mt2ng1s73alu7s0:6379",
+  url: "redis://red-cssj7mt2ng1s73alu7s0:6379" || process.env.REDIS_URL,
 });
 
 redisPublisher.on("error", (err) =>
