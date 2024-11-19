@@ -107,7 +107,7 @@ const CreateAudience = () => {
             </Button>
             <div className="flex justify-center items-start p-6 bg-customPurple rounded-full">
                 <div className="flex-1 max-w-md bg-white p-6 rounded-lg shadow-md mr-6">
-                    <h2 className="text-xl font-bold text-purple-600 mb-4">Create Audience</h2>
+                    <h2 className="text-xl font-bold text-purple-600 mb-4">Create Audience<h2 className="text-red-600">(Populate customer table first)</h2></h2>
 
                     <div className="mb-3">
                         <label htmlFor="name" className="block text-gray-700 font-semibold mb-1">Audience Name:</label>
