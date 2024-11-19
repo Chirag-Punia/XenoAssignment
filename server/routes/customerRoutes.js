@@ -4,7 +4,7 @@ const { body } = require("express-validator");
 const { authenticateJwt } = require("../middleware/auth");
 const {
   getCustomersController,
-  createCustomerController,
+    createCustomersController,
 } = require("../controllers/customerController");
 
 router.get("/", authenticateJwt, getCustomersController);
@@ -23,7 +23,7 @@ router.post(
       .withMessage("Last Visit should be a valid date"),
   ],
   authenticateJwt,
-  createCustomerController
+    createCustomersController
 );
 
 module.exports = router;
