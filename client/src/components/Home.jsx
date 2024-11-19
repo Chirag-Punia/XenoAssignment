@@ -20,8 +20,8 @@ const Home = () => {
             const response = await axios.post(
                 "https://xenoassignment.onrender.com/customers",
                 {
-                    name: "Random User",
-                    email: "randomuser@example.com",
+                    name: `Random User ${Math.random()}`,
+                    email: `randomuser${Math.random()}@example.com`,
                     totalSpends: Math.floor(Math.random() * 1000),
                     maxVisits: Math.floor(Math.random() * 100),
                     lastVisit: new Date().toISOString(),
